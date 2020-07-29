@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/seiya/xycar/devel -DCMAKE_INSTALL_PREFIX=/home/seiya/xycar/install -G Unix Makefiles
