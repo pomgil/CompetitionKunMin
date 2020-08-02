@@ -7,7 +7,6 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/seiya/xycar/devel:$CMAKE_PREFIX_PATH"
+export CMAKE_PREFIX_PATH="/home/seiya/xycar/devel:/opt/ros/kinetic"
 export PWD="/home/seiya/xycar/build"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/seiya/xycar/devel/share/common-lisp"
-export ROS_PACKAGE_PATH="/home/seiya/xycar/src:$ROS_PACKAGE_PATH"

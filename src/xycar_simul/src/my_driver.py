@@ -3,11 +3,14 @@ import cv2
 import rospy
 from std_msgs.msg import Int32MultiArray
 import time
+from algorithms import *
 
 cap = cv2.VideoCapture('/home/seiya/catkin_ws/src/xycar_simul/track-s.mkv')
 
 # FRAMES PER SECOND FOR VIDEO
 fps = 15
+WIDTH = 640
+HEIGHT = 480
 
 def pub_motor(Angle, Speed):
     drive_info = [Angle, Speed]
@@ -21,13 +24,62 @@ def start():
     rate = rospy.Rate(30)
     Speed = 20
 
-    Angle = -50
+    Angle = ""
 
     while True:
+        # Read the video file.
+        ret, frame = cap.read()
 
-        
-       pub_motor(Angle, Speed) 
-       rate.sleep()
+        # If we got frames, show them.
+        if ret == True:
+            imgPers = Perspective(frame, pts1)
+            imgFinal, imgFinalDuplicate, imgFinalDuplicate1 = Threshold(imgPers)
+            histogramLane, laneEnd = Histogram(imgFinalDuplicate, imgFinalDuplicate1)
+            LeftLanePos, RightLanePos = LaneFinder(imgFinal, histogramLane)
+            Result = LaneCenter(imgFinal, LeftLanePos, RightLanePos)
+            
+            if Result == 0:
+                Angle = 0
+            
+            elif 0 < Result < 10:
+                Angle = 5
+
+            elif 10 <= Result < 20:
+                Angle = 10
+
+            elif 20 <= Result < 30:
+                Angle = 15
+
+            elif 30 <= Result:
+                Angle = 20
+
+            elif -10 < Result < 0:
+                Angle = -5
+
+            elif -20 < Result <= -10:
+                Angle = -10
+
+            elif -30 < Result <= -20:
+                Angle = -15 
+
+            elif Result <= -30:
+                Angle = -20
+
+            # Display the frame at same frame rate of recording
+            # Watch lecture video for full explanation
+            time.sleep(1/fps)
+            cv2.imshow('frame',frame)
+
+            # Press q to quit
+            if cv2.waitKey(25) & 0xFF == ord('q'):           
+                break
+
+        # Or automatically break this whole loop if the video is over.
+        else:
+            break
+
+        pub_motor(Angle, Speed) 
+        rate.sleep()
 
 if __name__ == '__main__':
 
