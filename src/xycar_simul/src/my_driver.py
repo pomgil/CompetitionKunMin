@@ -5,6 +5,7 @@ from std_msgs.msg import Int32MultiArray
 import time
 from algorithms import *
 
+# object which stores info of track-s.mkv
 cap = cv2.VideoCapture('/home/seiya/catkin_ws/src/xycar_simul/track-s.mkv')
 
 # FRAMES PER SECOND FOR VIDEO
@@ -20,7 +21,7 @@ def start():
     rospy.init_node('my_driver')
     pub = rospy.Publisher('xycar_motor_msg', Int32MultiArray, queue_size=1)
     rate = rospy.Rate(30)
-    Speed = 20
+    Speed = 5
 
     Angle = ""
 
@@ -30,9 +31,8 @@ def start():
 
         # If we got frames, show them.
         if ret == True:
-            imgPers = Perspective(frame, pts1)
-            imgFinal, imgFinalDuplicate, imgFinalDuplicate1 = Threshold(imgPers)
-            histogramLane = Histogram(imgFinalDuplicate, imgFinalDuplicate1)
+            imgFinal, imgFinalDuplicate = Perspective(frame, pts1)
+            histogramLane = Histogram(imgFinalDuplicate)
             LeftLanePos, RightLanePos = LaneFinder(imgFinal, histogramLane)
             Result = LaneCenter(imgFinal, LeftLanePos, RightLanePos)
             
@@ -43,10 +43,10 @@ def start():
                 Angle = 5
 
             elif 5 <= Result < 10:
-                Angle = 10
+                Angle = 12
 
             elif 10 <= Result < 15:
-                Angle = 15
+                Angle = 17
 
             elif 15 <= Result:
                 Angle = 20
@@ -55,10 +55,10 @@ def start():
                 Angle = -5
 
             elif -10 < Result <= -5:
-                Angle = -10
+                Angle = -12
 
             elif -15 < Result <= -10:
-                Angle = -15 
+                Angle = -17
 
             elif Result <= -15:
                 Angle = -20
@@ -79,6 +79,8 @@ def start():
 
         pub_motor(Angle, Speed) 
         rate.sleep()
+    
+    cap.release()
 
 if __name__ == '__main__':
 
