@@ -70,7 +70,7 @@ def LaneFinder(imgFinal, histogramLane):
     LeftLanePos = np.argmax(histogramLane[:150])
 
     # find the position of left edge of right lane
-    RightLanePos = 590 + np.argmax(histogramLane[540:])
+    RightLanePos = 490 + np.argmax(histogramLane[490:])
 
     cv2.line(imgFinal, (LeftLanePos, 0), (LeftLanePos, HEIGHT), color=(0,255,0), thickness=2)
     cv2.line(imgFinal, (RightLanePos, 0), (RightLanePos, HEIGHT), color=(0,255,0), thickness=2)
