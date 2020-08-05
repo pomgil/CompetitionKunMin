@@ -23,7 +23,7 @@ def Perspective(image, pts1):
     cv2.waitKey(1)
 
     # Canny Edge Detection
-    imgEdge = cv2.Canny(imgGray, 170, 200) # 270, 300
+    imgEdge = cv2.Canny(imgGray, 58, 129) # 270, 300
 
     cv2.imshow("canny edge", imgEdge)
     cv2.waitKey(1)
